@@ -43,27 +43,32 @@ struct AvlTree {
         return inserted;
     }
 
+    Node* rotate(Node* node, int dir) {
+        node->height -= 2;
+        Node* kid = node->kids[dir];
+        node->kids[dir] = kid->kids[!dir];
+        kid->kids[!dir] = node;
+        return kid;
+    }
+
+    // true if right kid is heavier, false otherwise
+    bool bias(Node* node) {
+        return (node->kids[0]->height - node->kids[1]->height < 0);
+    }
+
     Node* balance(Node* node) {
         if (node->height < 2) return node;
         // right goes negative
         int bal = node->kids[0]->height - node->kids[1]->height;
         if (bal >= -1 && bal <=1 ) return node;
-        bool dir = (bal < -1);
+        bool dir = bias(node);
         Node* heavy_kid = node->kids[dir];
-        if (heavy_kid->kids[dir]->height < heavy_kid->kids[!dir]->height) {
-            Node* heavy_kid_kid = heavy_kid->kids[!dir];
-            heavy_kid->height -= 2;
-            heavy_kid_kid = heavy_kid_kid->kids[dir];
-            heavy_kid_kid->kids[dir] = heavy_kid;
-            node->kids[dir] = heavy_kid_kid;
-            heavy_kid = heavy_kid_kid;
+        if (bias(heavy_kid) != dir) {
+            node->kids[dir] = rotate(heavy_kid, !dir);
         }
-        node->height -= 2;
-        // TODO: check if heavy_kid height remains the same (testcase)
-        node->kids[dir] = heavy_kid->kids[!dir];
-        heavy_kid->kids[!dir] = node;
-        return heavy_kid; // becomes node
+        return rotate(node, dir);
     }
+
     Node* find(T val, Node* node) {
         if (isnull(node)) return nullptr;
         if (node->value == val) return node;
