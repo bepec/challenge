@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snippets/common.h"
+
 template<class T, int S>
 struct AvlTree {
     struct Node {
@@ -9,10 +11,9 @@ struct AvlTree {
         }
         inline bool isnull() { return this == getnull(); }
         T value;
-        int weight = 0;
         int height = -1;
         Node* kids[2] = { nullptr, nullptr };
-        Node(const T& v): value(v), weight(1), height(0) {
+        Node(const T& v): value(v), height(0) {
             kids[0] = getnull();
             kids[1] = getnull();
         }
@@ -28,6 +29,7 @@ struct AvlTree {
     Node* insert(T val) {
         return insert(val, root);
     }
+
     Node* insert(T val, Node*& node) {
         if (node->isnull()) {
             node = &nodes[size++];
@@ -35,10 +37,8 @@ struct AvlTree {
             return node;
         }
         Node*& kid = node->kids[val > node->value];
-        node->weight -= kid->weight;
         Node* inserted = insert(val, kid);
-        node->height = std::max(node->height, kid->height + 1);
-        node->weight += kid->weight;
+        node->height = MAX(node->height, kid->height + 1);
         node = balance(node);
         return inserted;
     }
@@ -48,17 +48,21 @@ struct AvlTree {
         // right goes negative
         int bal = node->kids[0]->height - node->kids[1]->height;
         if (bal >= -1 && bal <=1 ) return node;
-        bool dir = (bal < 1);
+        bool dir = (bal < -1);
         Node* heavy_kid = node->kids[dir];
-        if (heavy_kid->kids[dir]->height > heavy_kid->kids[!dir]->height) {
-            node->height -= 2;
-            // TODO: check if heavy_kid height remains the same (testcase)
-            node->kids[dir] = heavy_kid->kids[!dir];
-            heavy_kid->kids[!dir] = node;
-            return heavy_kid; // becomes node
+        if (heavy_kid->kids[dir]->height < heavy_kid->kids[!dir]->height) {
+            Node* heavy_kid_kid = heavy_kid->kids[!dir];
+            heavy_kid->height -= 2;
+            heavy_kid_kid = heavy_kid_kid->kids[dir];
+            heavy_kid_kid->kids[dir] = heavy_kid;
+            node->kids[dir] = heavy_kid_kid;
+            heavy_kid = heavy_kid_kid;
         }
-        // TODO: rotate twice
-        return node;
+        node->height -= 2;
+        // TODO: check if heavy_kid height remains the same (testcase)
+        node->kids[dir] = heavy_kid->kids[!dir];
+        heavy_kid->kids[!dir] = node;
+        return heavy_kid; // becomes node
     }
     Node* find(T val, Node* node) {
         if (isnull(node)) return nullptr;

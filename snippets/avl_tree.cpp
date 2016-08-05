@@ -83,28 +83,49 @@ BOOST_AUTO_TEST_CASE(height)
 BOOST_AUTO_TEST_CASE(balance)
 {
     AvlTree<int, 16> t;
-    auto n5 = t.insert(5);
-    auto n3 = t.insert(3);
-    auto n1 = t.insert(1);
-    BOOST_CHECK_EQUAL(n1, n3->kids[0]);
-    BOOST_CHECK_EQUAL(n5, n3->kids[1]);
-    BOOST_CHECK(n1->kids[0]->isnull());
-    BOOST_CHECK(n1->kids[1]->isnull());
-    BOOST_CHECK(n5->kids[0]->isnull());
-    BOOST_CHECK(n5->kids[1]->isnull());
+    auto n5 = t.insert(5);               //     5 
+    auto n3 = t.insert(3);               //    /  
+    auto n1 = t.insert(1);               //   3   
+    BOOST_CHECK_EQUAL(n1, n3->kids[0]);  //  /    
+    BOOST_CHECK_EQUAL(n5, n3->kids[1]);  // 1     
+    BOOST_CHECK(n1->kids[0]->isnull());  //       
+    BOOST_CHECK(n1->kids[1]->isnull());  //   3   
+    BOOST_CHECK(n5->kids[0]->isnull());  //  / \ .
+    BOOST_CHECK(n5->kids[1]->isnull());  // 1   5 
     BOOST_CHECK_EQUAL(0, n1->height);
     BOOST_CHECK_EQUAL(0, n5->height);
     BOOST_CHECK_EQUAL(1, n3->height);
 
-    auto n7 = t.insert(7);
-    auto n9 = t.insert(9);
-    BOOST_CHECK_EQUAL(n7, n3->kids[1]);
-    BOOST_CHECK_EQUAL(n5, n7->kids[0]);
+    auto n7 = t.insert(7);               //    3      
+    auto n9 = t.insert(9);               //  1/ \5    
+    BOOST_CHECK_EQUAL(n7, n3->kids[1]);  //       \7  
+    BOOST_CHECK_EQUAL(n5, n7->kids[0]);  //         \9
+    BOOST_CHECK_EQUAL(n9, n7->kids[1]);  //           
+    BOOST_CHECK_EQUAL(0, n1->height);    //    3      
+    BOOST_CHECK_EQUAL(0, n5->height);    //  1/ \7    
+    BOOST_CHECK_EQUAL(0, n9->height);    //    5/ \9  
+    BOOST_CHECK_EQUAL(1, n7->height);    //           
+    BOOST_CHECK_EQUAL(2, n3->height);    //           
+
+    auto n8 = t.insert(8);
+    BOOST_CHECK_EQUAL(n7, t.root);
+    BOOST_CHECK(n1->kids[0]->isnull());
+    BOOST_CHECK(n1->kids[1]->isnull());
+    BOOST_CHECK(n5->kids[0]->isnull());
+    BOOST_CHECK(n5->kids[1]->isnull());
+    BOOST_CHECK(n8->kids[0]->isnull());
+    BOOST_CHECK(n8->kids[1]->isnull());
+    BOOST_CHECK(n9->kids[1]->isnull());
+    BOOST_CHECK_EQUAL(n3, n7->kids[0]);
     BOOST_CHECK_EQUAL(n9, n7->kids[1]);
+    BOOST_CHECK_EQUAL(n1, n3->kids[0]);
+    BOOST_CHECK_EQUAL(n5, n3->kids[1]);
+    BOOST_CHECK_EQUAL(n8, n9->kids[0]);
     BOOST_CHECK_EQUAL(0, n1->height);
     BOOST_CHECK_EQUAL(0, n5->height);
-    BOOST_CHECK_EQUAL(0, n9->height);
-    BOOST_CHECK_EQUAL(1, n7->height);
-    BOOST_CHECK_EQUAL(2, n3->height);
+    BOOST_CHECK_EQUAL(0, n8->height);
+    BOOST_CHECK_EQUAL(1, n3->height);
+    BOOST_CHECK_EQUAL(1, n9->height);
+    BOOST_CHECK_EQUAL(2, n7->height);
 }
 
