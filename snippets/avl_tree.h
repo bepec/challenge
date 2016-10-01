@@ -74,5 +74,13 @@ struct AvlTree {
         if (node->value == val) return node;
         return find(val, node->kids[val > node->value]);
     }
+
+    template<class F> void iterate(F& func) { iterate(func, root); }
+    template<class F> bool iterate(F& func, Node* node) {
+        if (node->isnull()) return true;
+        if (iterate(func, node->kids[0]) == false) return false;
+        if (func(node) == false) return false;
+        return iterate(func, node->kids[1]);
+    }
 };
 

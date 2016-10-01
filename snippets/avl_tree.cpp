@@ -2,6 +2,7 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include "avl_tree.h"
+#include <iostream>
 
 BOOST_AUTO_TEST_CASE(init)
 {
@@ -129,3 +130,20 @@ BOOST_AUTO_TEST_CASE(balance)
     BOOST_CHECK_EQUAL(2, n7->height);
 }
 
+BOOST_AUTO_TEST_CASE(iterate)
+{
+    AvlTree<int, 32> t;
+    int data[] = { 5, 82, 13, 18, 34, 32, 62, 49, 14, 90, 75, 17, 56, 42 };
+    std::vector<int> sorted = { 5, 13, 14, 17, 18, 32, 34, 42, 49, 56, 62, 75, 82, 90 };
+    int* data_end = data + sizeof(data)/sizeof(*data);
+    for (int* it = data; it < data_end; it++) t.insert(*it);
+    struct {
+        std::vector<int> data;
+        bool operator() (AvlTree<int, 32>::Node* n) {
+            data.push_back(n->value); return true;
+        }
+    } sorter;
+    t.iterate(sorter);
+    BOOST_CHECK_EQUAL(sorted.size(), sorter.data.size());
+    BOOST_CHECK(sorted == sorter.data);
+}
