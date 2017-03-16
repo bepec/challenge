@@ -14,11 +14,11 @@ static i64 ar[MAXN];
 int main()
 {
 	int N, M;
-    scanf("%d %d", &N, &M);
+	scanf("%d %d", &N, &M);
 
 	for (int i = 0; i < M; i++) {
 		int a, b, k;
-        scanf("%d %d %d", &a, &b, &k);
+		scanf("%d %d %d", &a, &b, &k);
 		ar[a] += k;
 		ar[b+1] -= k;
 	}
@@ -29,6 +29,6 @@ int main()
 		cur += ar[i];
 		if (cur > max) max = cur;
 	}
-    printf("%lld\n", max);
+	printf("%lld\n", max);
 	return 0;
 }
