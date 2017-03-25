@@ -13,6 +13,8 @@ static i64 ar[MAXN];
 
 int main()
 {
+	ios::sync_with_stdio(false);
+
 	int N, M;
 	cin >> N >> M;
 
