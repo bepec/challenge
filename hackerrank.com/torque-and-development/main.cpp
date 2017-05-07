@@ -1,7 +1,15 @@
 #include <iostream>
 
+#ifdef _DEBUG
+#define DBG(S) cout << S
+#else
+#define DBG(S) 
+#endif
+
 using namespace std;
 const int NMAX = 100001;
+
+typedef long long i64;
 
 template<class T, int S>
 struct Stack {
@@ -27,7 +35,7 @@ struct Stack {
 
 typedef Stack<int, 2> Road;
 
-int64_t test() {
+i64 test() {
     bool visited[NMAX] = {false,};
     Road road[NMAX];
     int nc, nr, cl, cr;
@@ -47,7 +55,8 @@ int64_t test() {
             isles++;
             s.push(c);
             visited[c] = true;
-            //cout << "Start from " << c << ":";
+            DBG("Start from " << c << ":");
+            //cout << 
             while (!s.empty()) {
                 int cc = s.pop();
             //    cout << " " << cc;
@@ -59,6 +68,7 @@ int64_t test() {
                     }
                 }
             }
+            DBG(endl);
             //cout << endl;
         }
     }
