@@ -38,7 +38,7 @@ typedef Stack<int, 2> Road;
 i64 test() {
     bool visited[NMAX] = {false,};
     Road road[NMAX];
-    int nc, nr, cl, cr;
+    i64 nc, nr, cl, cr;
     cin >> nc >> nr >> cl >> cr;
     for(int a1 = 0; a1 < nr; a1++){
         int city_1;
@@ -47,7 +47,7 @@ i64 test() {
         road[city_1].push(city_2);
         road[city_2].push(city_1);
     }
-    if (cl < cr) return nc*cl;
+    if (nr == 0 || cl <= cr) return nc*cl;
     int isles = 0;
     Stack<int, NMAX> s;
     for (int c = 1; c <= nc; ++c) {
