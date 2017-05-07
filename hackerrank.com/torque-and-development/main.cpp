@@ -56,10 +56,9 @@ i64 test() {
             s.push(c);
             visited[c] = true;
             DBG("Start from " << c << ":");
-            //cout << 
             while (!s.empty()) {
                 int cc = s.pop();
-            //    cout << " " << cc;
+                DBG(" " << cc);
                 Road& r = road[cc];
                 for (int* pc = r.data; pc != r.end; ++pc) {
                     if (!visited[*pc]) {
@@ -69,7 +68,6 @@ i64 test() {
                 }
             }
             DBG(endl);
-            //cout << endl;
         }
     }
     return ((nc - isles)*cr + isles*cl);
@@ -84,4 +82,3 @@ int main(){
     }
     return 0;
 }
-
